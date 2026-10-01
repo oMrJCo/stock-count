@@ -59,7 +59,7 @@ function init(){
     session=s;if(!session){$("round").innerHTML=t("noround");$("start").disabled=true;return}
     $("branch").innerHTML=esc(session.branch||"Stock Count");
     $("round").innerHTML=esc(session.name)+" • "+esc(session.count_date)+(session.status!=="open"?" • "+t("closed"):"");
-    $("area").value="";
+    $("area").value=(session.areas&&session.areas.length)?session.areas[0]:"";
     if(session.status!=="open")$("start").disabled=true;
   },function(){ $("round").innerHTML=t("noround");$("start").disabled=true; });
 }
@@ -76,7 +76,7 @@ function startCamera(){
   if(typeof Html5Qrcode==="undefined"){$("camlabel").innerHTML=t("camfail");return}
   try{
     if(!scanner)scanner=new Html5Qrcode("reader");
-    scanner.start({facingMode:"environment"},{fps:10,qrbox:{width:240,height:130}},function(code){onScan(code)},function(){})
+    scanner.start({facingMode:"environment"},{fps:20,qrbox:{width:300,height:140},aspectRatio:1.777,disableFlip:true},function(code){onScan(code)},function(){})
       .then(function(){scanning=true;$("camlabel").innerHTML=t("aim")})
       .catch(function(){$("camlabel").innerHTML=t("camfail")});
   }catch(e){$("camlabel").innerHTML=t("camfail")}
@@ -107,11 +107,11 @@ function lookup(code){
 function save(){
   if(!selected)return;var qty=Number($("qty").value);if(isNaN(qty)||qty<0){$("qty").focus();return}
   var item=selected;
-  rpc("sc_count",{p_token:token,p_code:item.code,p_operator:operator,p_area:"",p_qty:qty},function(x){
+  rpc("sc_count",{p_token:token,p_code:item.code,p_operator:operator,p_area:$("area").value,p_qty:qty},function(x){
     lastEvent=x.event_id;$("latest").innerHTML="<b>"+esc(x.code)+"</b> +"+qty;$("camlabel").innerHTML="✓ "+t("saved")+" "+qty;
     $("productBox").className="productbox hide";selected=null;$("qty").value="";
     setTimeout(function(){busy=false;$("camlabel").innerHTML=t("aim");if(mode==="gun")$("code").focus()},300);
-  },function(){$("camlabel").innerHTML=t("savefail");$("qty").focus()});
+  },function(err){busy=false;$("camlabel").innerHTML=t("savefail");alert(t("savefail"));$("qty").focus()});
 }
 function undo(){if(!lastEvent)return;rpc("sc_undo",{p_token:token,p_event:lastEvent,p_operator:operator},function(ok){if(ok){$("latest").innerHTML="<b>—</b>";lastEvent=null}if(mode==="gun")$("code").focus()})}
 $("start").onclick=showWork;$("change").onclick=function(){location.reload()};
