@@ -1,7 +1,7 @@
 <!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>ตรวจนับสต็อก</title>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f3f6fa;color:#14213d}.top{height:44px;background:#102f5f;color:#fff;padding:8px 12px;display:flex;align-items:center;justify-content:space-between}.screen{height:calc(100svh - 44px);max-width:520px;margin:auto;padding:7px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:7px;overflow:hidden}.card{background:#fff;border:1px solid #d9e2ef;border-radius:13px;padding:9px}.login{display:block;height:auto;margin:16px auto;max-width:480px}.login>*{width:100%;margin:5px 0}.hide{display:none!important}input,select,button{font:inherit;font-size:16px;border-radius:10px;border:1px solid #cbd7e6;padding:11px}button{border:0;background:#1769df;color:#fff;font-weight:800}.secondary{background:#edf3fa;color:#18375f}.bad{color:#c93434}.muted{color:#6d7b91}.status{font-size:12px}.last{display:flex;align-items:center;justify-content:space-between}.workarea{display:flex;flex-direction:column;min-height:0;gap:7px}.camera{position:relative;flex:1;min-height:180px;background:#07101d;border-radius:12px;overflow:hidden}.camera #reader{width:100%;height:100%}.camera video{width:100%!important;height:100%!important;object-fit:cover}.scanline{pointer-events:none;position:absolute;inset:17% 8%;border:2px solid #fff;border-radius:14px;box-shadow:0 0 0 999px rgba(0,0,0,.16)}.camlabel{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);background:rgba(0,0,0,.62);color:#fff;border-radius:20px;padding:6px 12px;font-size:13px;white-space:nowrap}.actions{display:flex;gap:7px}.actions button{flex:1}.manual{display:flex;gap:7px}.manual input{min-width:0;flex:1}.productbox{background:#fff;border:1px solid #d9e2ef;border-radius:12px;padding:10px;text-align:center}.code{font-size:14px;color:#6d7b91}.name{font-size:20px;font-weight:900;line-height:1.2;margin:4px 0 8px}.qtyrow{display:flex;gap:8px;align-items:stretch}.qty{width:105px;text-align:center;font-size:28px;font-weight:900}.okbtn{flex:1;font-size:20px}.cancelbtn{width:100%;margin-top:7px}.hint{font-size:13px;color:#6d7b91}.success{font-weight:800;color:#15864b}.lang{display:flex;gap:4px;margin-left:auto;margin-right:8px}.lang button{padding:5px 8px;font-size:12px;background:#fff;color:#102f5f}.lang button.on{background:#ffd84d;color:#10213c}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f3f6fa;color:#14213d}.top{height:44px;background:#102f5f;color:#fff;padding:8px 12px;display:flex;align-items:center;justify-content:space-between}.screen{height:calc(100svh - 44px);max-width:520px;margin:auto;padding:7px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:7px;overflow:hidden}.card{background:#fff;border:1px solid #d9e2ef;border-radius:13px;padding:9px}.login{display:block;height:auto;margin:16px auto;max-width:480px}.login>*{width:100%;margin:5px 0}.hide{display:none!important}input,select,button{font:inherit;font-size:16px;border-radius:10px;border:1px solid #cbd7e6;padding:11px}button{border:0;background:#1769df;color:#fff;font-weight:800}.secondary{background:#edf3fa;color:#18375f}.bad{color:#c93434}.muted{color:#6d7b91}.status{font-size:12px}.last{display:flex;align-items:center;justify-content:space-between}.workarea{display:flex;flex-direction:column;min-height:0;gap:7px}.workarea.item-open .camera{flex:0 0 210px;min-height:210px}.workarea.item-open #cameraActions{display:none!important}.camera{position:relative;flex:1;min-height:180px;background:#07101d;border-radius:12px;overflow:hidden}.camera #reader{width:100%;height:100%}.camera video{width:100%!important;height:100%!important;object-fit:cover}.scanline{pointer-events:none;position:absolute;inset:17% 8%;border:2px solid #fff;border-radius:14px;box-shadow:0 0 0 999px rgba(0,0,0,.16)}.camlabel{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);background:rgba(0,0,0,.62);color:#fff;border-radius:20px;padding:6px 12px;font-size:13px;white-space:nowrap}.actions{display:flex;gap:7px}.actions button{flex:1}.manual{display:flex;gap:7px}.manual input{min-width:0;flex:1}.productbox{background:#fff;border:1px solid #d9e2ef;border-radius:12px;padding:10px;text-align:center}.code{font-size:14px;color:#6d7b91}.name{font-size:20px;font-weight:900;line-height:1.2;margin:4px 0 8px}.qtyrow{display:flex;gap:8px;align-items:stretch}.qty{width:105px;text-align:center;font-size:28px;font-weight:900}.okbtn{flex:1;font-size:20px}.cancelbtn{width:100%;margin-top:7px}.hint{font-size:13px;color:#6d7b91}.success{font-weight:800;color:#15864b}.lang{display:flex;gap:4px;margin-left:auto;margin-right:8px}.lang button{padding:5px 8px;font-size:12px;background:#fff;color:#102f5f}.lang button.on{background:#ffd84d;color:#10213c}
 </style></head><body>
 <header class="top"><b id="topTitle">📦 ตรวจนับสต็อก</b><div class="lang"><button id="thBtn">TH</button><button id="zhBtn">中文</button></div><span id="branch">—</span></header>
 <div id="login" class="card login"><h2 id="loginTitle">เริ่มตรวจนับ</h2><div id="round" class="muted">กำลังโหลดรอบ...</div><input id="worker" placeholder="ชื่อผู้ตรวจนับ"><input id="area" type="hidden" value=""><button id="start">เริ่มตรวจนับ</button><div id="err" class="bad"></div></div>
@@ -106,6 +106,17 @@ function startCamera(){
     launchScanner();
   }
 }
+function ensureCamera(){
+  if(mode!=="camera")return;
+  var v=document.querySelector("#reader video"),track=null;
+  try{track=v&&v.srcObject&&v.srcObject.getVideoTracks?v.srcObject.getVideoTracks()[0]:null}catch(e){}
+  if(track&&track.readyState==="live"){scanning=true;return}
+  scanning=false;
+  try{if(scanner&&scanner.clear)scanner.clear()}catch(e){}
+  scanner=null;
+  $("reader").innerHTML="";
+  setTimeout(function(){launchScanner()},80);
+}
 function setMode(m){
   mode=m;
   $("cameraMode").className=m==="camera"?"":"secondary";
@@ -115,7 +126,7 @@ function setMode(m){
   $("manualBox").className=m==="gun"?"manual":"manual hide";
   if(m==="gun"){busy=false;$("code").value="";setTimeout(function(){$("code").focus()},50)}else startCamera();
 }
-function resumeScan(){selected=null;busy=false;$("productBox").className="productbox hide";$("qty").value="";$("camlabel").innerHTML=t("aim")}
+function resumeScan(){selected=null;busy=false;$("productBox").className="productbox hide";document.querySelector(".workarea").className="workarea";$("qty").value="";$("camlabel").innerHTML=t("aim");ensureCamera()}
 function onScan(code){if(busy||selected)return;lookup(String(code).replace(/^\s+|\s+$/g,""))}
 function lookup(code){
   if(!code||busy)return;busy=true;$("camlabel").innerHTML=t("searching");
@@ -126,7 +137,7 @@ function lookup(code){
       return;
     }
     selected=x;$("selectedCode").innerHTML=esc(x.code);$("selectedName").innerHTML=esc(x.product_name);$("qty").value="";
-    $("productBox").className="productbox";$("camlabel").innerHTML=t("found");setTimeout(function(){$("qty").focus()},30);
+    $("productBox").className="productbox";document.querySelector(".workarea").className="workarea item-open";$("camlabel").innerHTML=t("found");setTimeout(function(){$("qty").focus()},30);
   },function(){busy=false;$("camlabel").innerHTML=t("searchfail");if(mode==="gun")$("code").focus()});
 }
 function save(){
@@ -134,8 +145,8 @@ function save(){
   var item=selected;
   rpc("sc_count",{p_token:token,p_code:item.code,p_operator:operator,p_area:$("area").value,p_qty:qty},function(x){
     lastEvent=x.event_id;$("latest").innerHTML="<b>"+esc(x.code)+"</b> +"+qty;$("camlabel").innerHTML="✓ "+t("saved")+" "+qty;
-    $("productBox").className="productbox hide";selected=null;$("qty").value="";
-    setTimeout(function(){busy=false;$("camlabel").innerHTML=t("aim");if(mode==="gun")$("code").focus()},300);
+    $("productBox").className="productbox hide";document.querySelector(".workarea").className="workarea";selected=null;$("qty").value="";
+    setTimeout(function(){busy=false;$("camlabel").innerHTML=t("aim");if(mode==="gun")$("code").focus();else ensureCamera()},300);
   },function(err){busy=false;$("camlabel").innerHTML=t("savefail");alert(t("savefail"));$("qty").focus()});
 }
 function undo(){if(!lastEvent)return;rpc("sc_undo",{p_token:token,p_event:lastEvent,p_operator:operator},function(ok){if(ok){$("latest").innerHTML="<b>—</b>";lastEvent=null}if(mode==="gun")$("code").focus()})}
@@ -146,6 +157,6 @@ $("manualBtn").onclick=function(){var b=$("manualBox");b.className=b.className.i
 $("manualGo").onclick=function(){var v=$("code").value.replace(/^\s+|\s+$/g,"");$("code").value="";if(mode!=="gun")$("manualBox").className="manual hide";busy=false;lookup(v)};
 $("code").onkeydown=function(e){e=e||window.event;if((e.key&&e.key==="Enter")||e.keyCode===13){if(e.preventDefault)e.preventDefault();$("manualGo").click();return false}};
 $("qty").onkeydown=function(e){e=e||window.event;if((e.key&&e.key==="Enter")||e.keyCode===13){if(e.preventDefault)e.preventDefault();save();return false}};
-$("cancelItem").onclick=function(){selected=null;busy=false;$("productBox").className="productbox hide";$("qty").value="";$("selectedCode").innerHTML="";$("selectedName").innerHTML="";$("camlabel").innerHTML=t("aim");if(mode==="gun")$("code").focus()};$("save").onclick=save;$("undo").onclick=undo;$("thBtn").onclick=function(){setLang("th")};$("zhBtn").onclick=function(){setLang("zh")};
+$("cancelItem").onclick=function(){selected=null;busy=false;$("productBox").className="productbox hide";document.querySelector(".workarea").className="workarea";$("qty").value="";$("selectedCode").innerHTML="";$("selectedName").innerHTML="";$("camlabel").innerHTML=t("aim");if(mode==="gun")$("code").focus();else ensureCamera()};$("save").onclick=save;$("undo").onclick=undo;$("thBtn").onclick=function(){setLang("th")};$("zhBtn").onclick=function(){setLang("zh")};
 init();
 </script></body></html>
