@@ -23,8 +23,8 @@ var token=getParam("s"),session=null,lastEvent=null,operator="",selected=null,sc
 function $(id){return document.getElementById(id)}
 var lang=localStorage.getItem("sc_lang")||"th";
 var TX={
-th:{top:"📦 ตรวจนับสต็อก",login:"เริ่มตรวจนับ",worker:"ชื่อผู้ตรวจนับ",start:"เริ่มตรวจนับ",change:"เปลี่ยน",scan:"สแกน",manual:"พิมพ์รหัส",manualph:"พิมพ์ Barcode / รหัสสินค้า",ok:"ตกลง",qty:"จำนวน",latest:"ล่าสุด",undo:"↶ ย้อน",camera:"📷 กล้อง",gun:"▥ เครื่องยิง",opening:"กำลังเปิดกล้อง…",aim:"เล็งบาร์โค้ดให้อยู่ในกรอบ",camfail:"เปิดกล้องไม่ได้ • ใช้พิมพ์รหัสแทน",searching:"กำลังค้นหา…",notfound:"ไม่พบสินค้า • สแกนใหม่",found:"พบสินค้าแล้ว • ใส่จำนวน",searchfail:"ค้นหาไม่สำเร็จ",needname:"ใส่ชื่อผู้ตรวจนับก่อน",nolink:"ลิงก์นี้ยังไม่ได้ผูกกับรอบตรวจนับ",noround:"ไม่พบรอบตรวจนับ",closed:"ปิดรอบแล้ว",saved:"บันทึก",savefail:"บันทึกไม่สำเร็จ"},
-zh:{top:"📦 库存盘点",login:"开始盘点",worker:"盘点人员姓名",start:"开始盘点",change:"更换",scan:"扫描",manual:"手动输入",manualph:"输入条码 / 商品编码",ok:"确认",qty:"数量",latest:"最近记录",undo:"↶ 撤销",camera:"📷 相机",gun:"▥ 扫码枪",opening:"正在打开相机…",aim:"请将条码对准扫描框",camfail:"无法打开相机 • 请手动输入",searching:"正在查找…",notfound:"未找到商品 • 请重新扫描",found:"已找到商品 • 请输入数量",searchfail:"查找失败",needname:"请先输入盘点人员姓名",nolink:"此链接尚未绑定盘点任务",noround:"未找到盘点任务",closed:"已关闭",saved:"已保存",savefail:"保存失败"}
+th:{top:"📦 ตรวจนับสต็อก",login:"เริ่มตรวจนับ",worker:"ชื่อผู้ตรวจนับ",start:"เริ่มตรวจนับ",change:"เปลี่ยน",scan:"สแกน",manual:"พิมพ์รหัส",manualph:"พิมพ์ Barcode / รหัสสินค้า",ok:"ตกลง",qty:"จำนวน",latest:"ล่าสุด",undo:"↶ ย้อน",camera:"📷 กล้อง",gun:"▥ เครื่องยิง",opening:"กำลังเปิดกล้อง…",aim:"เล็งบาร์โค้ดให้อยู่ในกรอบ",camfail:"เปิดกล้องไม่ได้ • ใช้พิมพ์รหัสแทน",camask:"กำลังขออนุญาตใช้กล้อง…",camdenied:"ไม่ได้รับอนุญาตใช้กล้อง • ตรวจสอบสิทธิ์กล้องของ Safari",searching:"กำลังค้นหา…",notfound:"ไม่พบสินค้า • สแกนใหม่",found:"พบสินค้าแล้ว • ใส่จำนวน",searchfail:"ค้นหาไม่สำเร็จ",needname:"ใส่ชื่อผู้ตรวจนับก่อน",nolink:"ลิงก์นี้ยังไม่ได้ผูกกับรอบตรวจนับ",noround:"ไม่พบรอบตรวจนับ",closed:"ปิดรอบแล้ว",saved:"บันทึก",savefail:"บันทึกไม่สำเร็จ"},
+zh:{top:"📦 库存盘点",login:"开始盘点",worker:"盘点人员姓名",start:"开始盘点",change:"更换",scan:"扫描",manual:"手动输入",manualph:"输入条码 / 商品编码",ok:"确认",qty:"数量",latest:"最近记录",undo:"↶ 撤销",camera:"📷 相机",gun:"▥ 扫码枪",opening:"正在打开相机…",aim:"请将条码对准扫描框",camfail:"无法打开相机 • 请手动输入",camask:"正在请求相机权限…",camdenied:"相机权限未开启 • 请检查 Safari 相机权限",searching:"正在查找…",notfound:"未找到商品 • 请重新扫描",found:"已找到商品 • 请输入数量",searchfail:"查找失败",needname:"请先输入盘点人员姓名",nolink:"此链接尚未绑定盘点任务",noround:"未找到盘点任务",closed:"已关闭",saved:"已保存",savefail:"保存失败"}
 };
 function t(k){return TX[lang][k]||k}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]})}
@@ -71,7 +71,7 @@ function showWork(){
   $("login").className+=" hide";$("work").className=$("work").className.replace(/\bhide\b/g,"");
   setMode("gun");
 }
-function startCamera(){
+function launchScanner(){
   if(scanning)return;
   if(typeof Html5Qrcode==="undefined"){$("camlabel").innerHTML=t("camfail");return}
   try{
@@ -87,10 +87,24 @@ Html5QrcodeSupportedFormats.ITF,
 Html5QrcodeSupportedFormats.CODABAR,
 Html5QrcodeSupportedFormats.QR_CODE
 ]});
-    scanner.start({facingMode:"environment",width:{ideal:1920},height:{ideal:1080}},{fps:25,qrbox:{width:340,height:110},aspectRatio:1.777,disableFlip:true},function(code){onScan(code)},function(){})
+    scanner.start({facingMode:"environment"},{fps:20,qrbox:{width:320,height:110},disableFlip:true},function(code){onScan(code)},function(){})
       .then(function(){scanning=true;$("camlabel").innerHTML=t("aim")})
-      .catch(function(){$("camlabel").innerHTML=t("camfail")});
+      .catch(function(err){$("camlabel").innerHTML=t("camfail")});
   }catch(e){$("camlabel").innerHTML=t("camfail")}
+}
+function startCamera(){
+  if(scanning)return;
+  $("camlabel").innerHTML=t("camask");
+  if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"},audio:false}).then(function(stream){
+      var tracks=stream.getTracks();for(var i=0;i<tracks.length;i++)tracks[i].stop();
+      launchScanner();
+    }).catch(function(err){
+      $("camlabel").innerHTML=(err&&err.name==="NotAllowedError")?t("camdenied"):t("camfail");
+    });
+  }else{
+    launchScanner();
+  }
 }
 function setMode(m){
   mode=m;
@@ -126,7 +140,7 @@ function save(){
 }
 function undo(){if(!lastEvent)return;rpc("sc_undo",{p_token:token,p_event:lastEvent,p_operator:operator},function(ok){if(ok){$("latest").innerHTML="<b>—</b>";lastEvent=null}if(mode==="gun")$("code").focus()})}
 $("start").onclick=showWork;$("change").onclick=function(){location.reload()};
-$("cameraMode").onclick=function(){setMode("camera")};$("gunMode").onclick=function(){setMode("gun")};
+$("cameraMode").onclick=function(){mode="camera";$("cameraMode").className="";$("gunMode").className="secondary";$("camera").className="camera";$("cameraActions").className="actions";$("manualBox").className="manual hide";startCamera()};$("gunMode").onclick=function(){setMode("gun")};
 $("scanBtn").onclick=function(){if(selected)resumeScan();else{busy=false;$("camlabel").innerHTML=t("aim");startCamera()}};
 $("manualBtn").onclick=function(){var b=$("manualBox");b.className=b.className.indexOf("hide")>=0?"manual":"manual hide";if(b.className.indexOf("hide")<0)$("code").focus()};
 $("manualGo").onclick=function(){var v=$("code").value.replace(/^\s+|\s+$/g,"");$("code").value="";if(mode!=="gun")$("manualBox").className="manual hide";busy=false;lookup(v)};
