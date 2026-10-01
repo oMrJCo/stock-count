@@ -16,24 +16,111 @@
 <section class="card last"><div><small id="latestLabel" class="muted">ล่าสุด</small><div id="latest"><b>—</b></div></div><button id="undo" class="secondary">↶ ย้อน</button></section>
 </main>
 <script>
-let lang=localStorage.getItem('sc_lang')||'th';const TX={th:{top:'📦 ตรวจนับสต็อก',login:'เริ่มตรวจนับ',worker:'ชื่อผู้ตรวจนับ',start:'เริ่มตรวจนับ',change:'เปลี่ยน',scan:'สแกน',manual:'พิมพ์รหัส',manualph:'พิมพ์ Barcode / รหัสสินค้า',ok:'ตกลง',qty:'จำนวน',latest:'ล่าสุด',undo:'↶ ย้อน',camera:'📷 กล้อง',gun:'▥ เครื่องยิง',opening:'กำลังเปิดกล้อง…',aim:'เล็งบาร์โค้ดให้อยู่ในกรอบ',camfail:'เปิดกล้องไม่ได้ • ใช้พิมพ์รหัสแทน',searching:'กำลังค้นหา…',notfound:'ไม่พบสินค้า • สแกนใหม่',found:'พบสินค้าแล้ว • ใส่จำนวน',searchfail:'ค้นหาไม่สำเร็จ',needname:'ใส่ชื่อผู้ตรวจนับก่อน',nolink:'ลิงก์นี้ยังไม่ได้ผูกกับรอบตรวจนับ',noround:'ไม่พบรอบตรวจนับ',closed:'ปิดรอบแล้ว',saved:'บันทึก',savefail:'บันทึกไม่สำเร็จ'},zh:{top:'📦 库存盘点',login:'开始盘点',worker:'盘点人员姓名',start:'开始盘点',change:'更换',scan:'扫描',manual:'手动输入',manualph:'输入条码 / 商品编码',ok:'确认',qty:'数量',latest:'最近记录',undo:'↶ 撤销',camera:'📷 相机',gun:'▥ 扫码枪',opening:'正在打开相机…',aim:'请将条码对准扫描框',camfail:'无法打开相机 • 请手动输入',searching:'正在查找…',notfound:'未找到商品 • 请重新扫描',found:'已找到商品 • 请输入数量',searchfail:'查找失败',needname:'请先输入盘点人员姓名',nolink:'此链接尚未绑定盘点任务',noround:'未找到盘点任务',closed:'已关闭',saved:'已保存',savefail:'保存失败'}};const t=k=>TX[lang][k]||k;function applyLang(){document.documentElement.lang=lang==='zh'?'zh-CN':'th';$('topTitle').textContent=t('top');$('loginTitle').textContent=t('login');$('worker').placeholder=t('worker');$('start').textContent=t('start');$('change').textContent=t('change');$('scanBtn').textContent=t('scan');$('manualBtn').textContent=t('manual');$('code').placeholder=t('manualph');$('manualGo').textContent=t('ok');$('qty').placeholder=t('qty');$('save').textContent=t('ok');$('latestLabel').textContent=t('latest');$('undo').textContent=t('undo');$('cameraMode').textContent=t('camera');$('gunMode').textContent=t('gun');$('thBtn').classList.toggle('on',lang==='th');$('zhBtn').classList.toggle('on',lang==='zh')}function setLang(x){lang=x;localStorage.setItem('sc_lang',x);applyLang();if(session){$('round').textContent=session.name+' • '+session.count_date+(session.status!=='open'?' • '+t('closed'):'')}}
-const API="https://dxlngxkuggbgdzmithzx.supabase.co/rest/v1/rpc/",KEY="sb_publishable_sqAwuko-g-Kgzp51YyMT3g_gIAwtEan";const token=new URLSearchParams(location.search).get('s');let session=null,lastEvent=null,operator='',selected=null,scanner=null,scanning=false,busy=false,mode='camera';const $=id=>document.getElementById(id);
-async function rpc(fn,body){let r=await fetch(API+fn,{method:'POST',headers:{'Content-Type':'application/json','apikey':KEY},body:JSON.stringify(body)});if(!r.ok)throw new Error(await r.text());return r.json()}
-function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-async function init(){if(!token){$('round').textContent=t('nolink');$('start').disabled=true;return}try{session=await rpc('sc_counter_info',{p_token:token});if(!session)throw 0;$('branch').textContent=session.branch||'Stock Count';$('round').textContent=session.name+' • '+session.count_date+(session.status!=='open'?' • '+t('closed'):'');$('area').value='';if(session.status!=='open')$('start').disabled=true}catch(e){$('round').textContent=t('noround');$('start').disabled=true}}
-$('start').onclick=async()=>{operator=$('worker').value.trim();if(!operator)return $('err').textContent=t('needname');$('identity').textContent=operator;$('round2').textContent=session.name;$('login').classList.add('hide');$('work').classList.remove('hide');await startCamera()};
-$('change').onclick=()=>location.reload();
-async function startCamera(){if(scanning)return;try{if(!scanner)scanner=new Html5Qrcode("reader");await scanner.start({facingMode:"environment"},{fps:12,qrbox:{width:280,height:150},aspectRatio:1.777},onScan,()=>{});scanning=true;$('camlabel').textContent=t('aim')}catch(e){$('camlabel').textContent=t('camfail')}}
-async function pauseScan(){busy=true;$('camlabel').textContent=t('found')}
-function resumeScan(){selected=null;busy=false;$('productBox').classList.add('hide');$('qty').value='';$('camlabel').textContent='เล็งบาร์โค้ดให้อยู่ในกรอบ'}
-async function onScan(code){if(busy||selected)return;await lookup(String(code).trim())}
-async function lookup(code){if(!code||busy)return;busy=true;$('camlabel').textContent=t('searching');try{let x=await rpc('sc_lookup',{p_token:token,p_code:code});if(!x.found){$('camlabel').textContent=t('notfound');setTimeout(()=>{busy=false;$('camlabel').textContent='เล็งบาร์โค้ดให้อยู่ในกรอบ'},900);return}selected=x;$('selectedCode').textContent=x.code;$('selectedName').textContent=x.product_name;$('qty').value='';$('productBox').classList.remove('hide');$('camlabel').textContent=t('found');$('qty').focus()}catch(e){$('camlabel').textContent=t('searchfail');setTimeout(()=>busy=false,900)}}
-$('scanBtn').onclick=()=>{if(selected)resumeScan();else{busy=false;$('camlabel').textContent='เล็งบาร์โค้ดให้อยู่ในกรอบ';startCamera()}};
-$('manualBtn').onclick=()=>{$('manualBox').classList.toggle('hide');if(!$('manualBox').classList.contains('hide'))$('code').focus()};
-$('manualGo').onclick=()=>{let v=$('code').value.trim();$('code').value='';if(mode!=='gun')$('manualBox').classList.add('hide');busy=false;lookup(v)};
-$('code').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('manualGo').click()}});
-$('save').onclick=async()=>{if(!selected)return;let qty=Number($('qty').value);if(!Number.isFinite(qty)||qty<0){$('qty').focus();return}let item=selected;try{let x=await rpc('sc_count',{p_token:token,p_code:item.code,p_operator:operator,p_area:$('area').value,p_qty:qty});lastEvent=x.event_id;$('latest').innerHTML='<b>'+esc(x.code)+'</b> +'+qty;$('camlabel').textContent='✓ '+t('saved')+' '+qty;$('productBox').classList.add('hide');selected=null;$('qty').value='';setTimeout(()=>{busy=false;$('camlabel').textContent='เล็งบาร์โค้ดให้อยู่ในกรอบ'},350)}catch(e){$('camlabel').textContent=t('savefail');$('qty').focus()}};
-$('qty').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('save').click()}});
-$('undo').onclick=async()=>{if(!lastEvent)return;let ok=await rpc('sc_undo',{p_token:token,p_event:lastEvent,p_operator:operator});if(ok){$('latest').innerHTML='<b>—</b>';lastEvent=null}};
-$('thBtn').onclick=()=>setLang('th');$('zhBtn').onclick=()=>setLang('zh');applyLang();init();
+var API="https://dxlngxkuggbgdzmithzx.supabase.co/rest/v1/rpc/";
+var KEY="sb_publishable_sqAwuko-g-Kgzp51YyMT3g_gIAwtEan";
+function getParam(name){var m=new RegExp("[?&]"+name+"=([^&]*)").exec(location.search);return m?decodeURIComponent(m[1].replace(/\+/g," ")):""}
+var token=getParam("s"),session=null,lastEvent=null,operator="",selected=null,scanner=null,scanning=false,busy=false,mode="camera";
+function $(id){return document.getElementById(id)}
+var lang=localStorage.getItem("sc_lang")||"th";
+var TX={
+th:{top:"📦 ตรวจนับสต็อก",login:"เริ่มตรวจนับ",worker:"ชื่อผู้ตรวจนับ",start:"เริ่มตรวจนับ",change:"เปลี่ยน",scan:"สแกน",manual:"พิมพ์รหัส",manualph:"พิมพ์ Barcode / รหัสสินค้า",ok:"ตกลง",qty:"จำนวน",latest:"ล่าสุด",undo:"↶ ย้อน",camera:"📷 กล้อง",gun:"▥ เครื่องยิง",opening:"กำลังเปิดกล้อง…",aim:"เล็งบาร์โค้ดให้อยู่ในกรอบ",camfail:"เปิดกล้องไม่ได้ • ใช้พิมพ์รหัสแทน",searching:"กำลังค้นหา…",notfound:"ไม่พบสินค้า • สแกนใหม่",found:"พบสินค้าแล้ว • ใส่จำนวน",searchfail:"ค้นหาไม่สำเร็จ",needname:"ใส่ชื่อผู้ตรวจนับก่อน",nolink:"ลิงก์นี้ยังไม่ได้ผูกกับรอบตรวจนับ",noround:"ไม่พบรอบตรวจนับ",closed:"ปิดรอบแล้ว",saved:"บันทึก",savefail:"บันทึกไม่สำเร็จ"},
+zh:{top:"📦 库存盘点",login:"开始盘点",worker:"盘点人员姓名",start:"开始盘点",change:"更换",scan:"扫描",manual:"手动输入",manualph:"输入条码 / 商品编码",ok:"确认",qty:"数量",latest:"最近记录",undo:"↶ 撤销",camera:"📷 相机",gun:"▥ 扫码枪",opening:"正在打开相机…",aim:"请将条码对准扫描框",camfail:"无法打开相机 • 请手动输入",searching:"正在查找…",notfound:"未找到商品 • 请重新扫描",found:"已找到商品 • 请输入数量",searchfail:"查找失败",needname:"请先输入盘点人员姓名",nolink:"此链接尚未绑定盘点任务",noround:"未找到盘点任务",closed:"已关闭",saved:"已保存",savefail:"保存失败"}
+};
+function t(k){return TX[lang][k]||k}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]})}
+function rpc(fn,body,ok,fail){
+  var x=new XMLHttpRequest();
+  x.open("POST",API+fn,true);
+  x.setRequestHeader("Content-Type","application/json");
+  x.setRequestHeader("apikey",KEY);
+  x.onreadystatechange=function(){
+    if(x.readyState!==4)return;
+    if(x.status>=200&&x.status<300){
+      var d=null;try{d=JSON.parse(x.responseText)}catch(e){d=x.responseText}
+      if(ok)ok(d);
+    }else{if(fail)fail(x.responseText||("HTTP "+x.status))}
+  };
+  try{x.send(JSON.stringify(body))}catch(e){if(fail)fail(String(e))}
+}
+function applyLang(){
+  document.documentElement.lang=lang==="zh"?"zh-CN":"th";
+  $("topTitle").innerHTML=t("top");$("loginTitle").innerHTML=t("login");$("worker").placeholder=t("worker");
+  $("start").innerHTML=t("start");$("change").innerHTML=t("change");$("scanBtn").innerHTML=t("scan");
+  $("manualBtn").innerHTML=t("manual");$("code").placeholder=t("manualph");$("manualGo").innerHTML=t("ok");
+  $("qty").placeholder=t("qty");$("save").innerHTML=t("ok");$("latestLabel").innerHTML=t("latest");$("undo").innerHTML=t("undo");
+  $("cameraMode").innerHTML=t("camera");$("gunMode").innerHTML=t("gun");
+  $("thBtn").className=lang==="th"?"on":"";$("zhBtn").className=lang==="zh"?"on":"";
+}
+function setLang(x){lang=x;localStorage.setItem("sc_lang",x);applyLang();if(session)$("round").innerHTML=esc(session.name)+" • "+esc(session.count_date)+(session.status!=="open"?" • "+t("closed"):"")}
+function init(){
+  applyLang();
+  if(!token){$("round").innerHTML=t("nolink");$("start").disabled=true;return}
+  rpc("sc_counter_info",{p_token:token},function(s){
+    session=s;if(!session){$("round").innerHTML=t("noround");$("start").disabled=true;return}
+    $("branch").innerHTML=esc(session.branch||"Stock Count");
+    $("round").innerHTML=esc(session.name)+" • "+esc(session.count_date)+(session.status!=="open"?" • "+t("closed"):"");
+    $("area").value="";
+    if(session.status!=="open")$("start").disabled=true;
+  },function(){ $("round").innerHTML=t("noround");$("start").disabled=true; });
+}
+function showWork(){
+  operator=$("worker").value.replace(/^\s+|\s+$/g,"");
+  if(!operator){$("err").innerHTML=t("needname");return}
+  if(!session){$("err").innerHTML=t("noround");return}
+  $("identity").innerHTML=esc(operator);$("round2").innerHTML=esc(session.name);
+  $("login").className+=" hide";$("work").className=$("work").className.replace(/\bhide\b/g,"");
+  setMode("gun");
+}
+function startCamera(){
+  if(scanning)return;
+  if(typeof Html5Qrcode==="undefined"){$("camlabel").innerHTML=t("camfail");return}
+  try{
+    if(!scanner)scanner=new Html5Qrcode("reader");
+    scanner.start({facingMode:"environment"},{fps:10,qrbox:{width:240,height:130}},function(code){onScan(code)},function(){})
+      .then(function(){scanning=true;$("camlabel").innerHTML=t("aim")})
+      .catch(function(){$("camlabel").innerHTML=t("camfail")});
+  }catch(e){$("camlabel").innerHTML=t("camfail")}
+}
+function setMode(m){
+  mode=m;
+  $("cameraMode").className=m==="camera"?"":"secondary";
+  $("gunMode").className=m==="gun"?"":"secondary";
+  $("camera").className=m==="gun"?"camera hide":"camera";
+  $("cameraActions").className=m==="gun"?"actions hide":"actions";
+  $("manualBox").className=m==="gun"?"manual":"manual hide";
+  if(m==="gun"){busy=false;$("code").value="";setTimeout(function(){$("code").focus()},50)}else startCamera();
+}
+function resumeScan(){selected=null;busy=false;$("productBox").className="productbox hide";$("qty").value="";$("camlabel").innerHTML=t("aim")}
+function onScan(code){if(busy||selected)return;lookup(String(code).replace(/^\s+|\s+$/g,""))}
+function lookup(code){
+  if(!code||busy)return;busy=true;$("camlabel").innerHTML=t("searching");
+  rpc("sc_lookup",{p_token:token,p_code:code},function(x){
+    if(!x||!x.found){
+      if(mode==="gun"){alert(t("notfound")+"\n"+code);busy=false;$("code").focus()}
+      else{$("camlabel").innerHTML=t("notfound");setTimeout(function(){busy=false;$("camlabel").innerHTML=t("aim")},900)}
+      return;
+    }
+    selected=x;$("selectedCode").innerHTML=esc(x.code);$("selectedName").innerHTML=esc(x.product_name);$("qty").value="";
+    $("productBox").className="productbox";$("camlabel").innerHTML=t("found");setTimeout(function(){$("qty").focus()},30);
+  },function(){busy=false;$("camlabel").innerHTML=t("searchfail");if(mode==="gun")$("code").focus()});
+}
+function save(){
+  if(!selected)return;var qty=Number($("qty").value);if(isNaN(qty)||qty<0){$("qty").focus();return}
+  var item=selected;
+  rpc("sc_count",{p_token:token,p_code:item.code,p_operator:operator,p_area:"",p_qty:qty},function(x){
+    lastEvent=x.event_id;$("latest").innerHTML="<b>"+esc(x.code)+"</b> +"+qty;$("camlabel").innerHTML="✓ "+t("saved")+" "+qty;
+    $("productBox").className="productbox hide";selected=null;$("qty").value="";
+    setTimeout(function(){busy=false;$("camlabel").innerHTML=t("aim");if(mode==="gun")$("code").focus()},300);
+  },function(){$("camlabel").innerHTML=t("savefail");$("qty").focus()});
+}
+function undo(){if(!lastEvent)return;rpc("sc_undo",{p_token:token,p_event:lastEvent,p_operator:operator},function(ok){if(ok){$("latest").innerHTML="<b>—</b>";lastEvent=null}if(mode==="gun")$("code").focus()})}
+$("start").onclick=showWork;$("change").onclick=function(){location.reload()};
+$("cameraMode").onclick=function(){setMode("camera")};$("gunMode").onclick=function(){setMode("gun")};
+$("scanBtn").onclick=function(){if(selected)resumeScan();else{busy=false;$("camlabel").innerHTML=t("aim");startCamera()}};
+$("manualBtn").onclick=function(){var b=$("manualBox");b.className=b.className.indexOf("hide")>=0?"manual":"manual hide";if(b.className.indexOf("hide")<0)$("code").focus()};
+$("manualGo").onclick=function(){var v=$("code").value.replace(/^\s+|\s+$/g,"");$("code").value="";if(mode!=="gun")$("manualBox").className="manual hide";busy=false;lookup(v)};
+$("code").onkeydown=function(e){e=e||window.event;if((e.key&&e.key==="Enter")||e.keyCode===13){if(e.preventDefault)e.preventDefault();$("manualGo").click();return false}};
+$("qty").onkeydown=function(e){e=e||window.event;if((e.key&&e.key==="Enter")||e.keyCode===13){if(e.preventDefault)e.preventDefault();save();return false}};
+$("save").onclick=save;$("undo").onclick=undo;$("thBtn").onclick=function(){setLang("th")};$("zhBtn").onclick=function(){setLang("zh")};
+init();
 </script></body></html>
