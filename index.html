@@ -19,7 +19,7 @@
 var API="https://dxlngxkuggbgdzmithzx.supabase.co/rest/v1/rpc/";
 var KEY="sb_publishable_sqAwuko-g-Kgzp51YyMT3g_gIAwtEan";
 function getParam(name){var m=new RegExp("[?&]"+name+"=([^&]*)").exec(location.search);return m?decodeURIComponent(m[1].replace(/\+/g," ")):""}
-var token=getParam("s"),session=null,lastEvent=null,operator="",selected=null,scanner=null,scanning=false,busy=false,mode="camera";
+var token=getParam("s"),session=null,lastEvent=null,operator="",selected=null,scanner=null,scanning=false,busy=false,mode="camera",workerKey="sc_worker_"+(token||"default");
 function $(id){return document.getElementById(id)}
 var lang=localStorage.getItem("sc_lang")||"th";
 var TX={
@@ -54,6 +54,7 @@ function applyLang(){
 function setLang(x){lang=x;localStorage.setItem("sc_lang",x);applyLang();if(session)$("round").innerHTML=esc(session.name)+" • "+esc(session.count_date)+(session.status!=="open"?" • "+t("closed"):"")}
 function init(){
   applyLang();
+  try{var savedWorker=localStorage.getItem(workerKey)||"";if(savedWorker)$("worker").value=savedWorker}catch(e){}
   if(!token){$("round").innerHTML=t("nolink");$("start").disabled=true;return}
   rpc("sc_counter_info",{p_token:token},function(s){
     session=s;if(!session){$("round").innerHTML=t("noround");$("start").disabled=true;return}
@@ -65,7 +66,7 @@ function init(){
 }
 function showWork(){
   operator=$("worker").value.replace(/^\s+|\s+$/g,"");
-  if(!operator){$("err").innerHTML=t("needname");return}
+  if(!operator){$("err").innerHTML=t("needname");return}try{localStorage.setItem(workerKey,operator)}catch(e){}
   if(!session){$("err").innerHTML=t("noround");return}
   $("identity").innerHTML=esc(operator);$("round2").innerHTML=esc(session.name);
   $("login").className+=" hide";$("work").className=$("work").className.replace(/\bhide\b/g,"");
@@ -150,7 +151,7 @@ function save(){
   },function(err){busy=false;$("camlabel").innerHTML=t("savefail");alert(t("savefail"));$("qty").focus()});
 }
 function undo(){if(!lastEvent)return;rpc("sc_undo",{p_token:token,p_event:lastEvent,p_operator:operator},function(ok){if(ok){$("latest").innerHTML="<b>—</b>";lastEvent=null}if(mode==="gun")$("code").focus()})}
-$("start").onclick=showWork;$("change").onclick=function(){location.reload()};
+$("start").onclick=showWork;$("change").onclick=function(){try{localStorage.removeItem(workerKey)}catch(e){}location.reload()};
 $("cameraMode").onclick=function(){mode="camera";$("cameraMode").className="";$("gunMode").className="secondary";$("camera").className="camera";$("cameraActions").className="actions";$("manualBox").className="manual hide";startCamera()};$("gunMode").onclick=function(){setMode("gun")};
 $("scanBtn").onclick=function(){if(selected)resumeScan();else{busy=false;$("camlabel").innerHTML=t("aim");startCamera()}};
 $("manualBtn").onclick=function(){var b=$("manualBox");b.className=b.className.indexOf("hide")>=0?"manual":"manual hide";if(b.className.indexOf("hide")<0)$("code").focus()};
