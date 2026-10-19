@@ -97,6 +97,7 @@ $('closeBtn').onclick=async()=>{let close=snap.session.status!=='closed';await r
   return map[k]?(zh?map[k][1]:map[k][0]):k;
 }
 $('exportBtn').onclick=()=>{let zh=lang==='zh',areas=snap.areas||[];let rows=(snap.items||[]).map(x=>{let st=status(x),blank=st==='uncounted'||st==='zero',row={};row[zh?'编码':'รหัส']=x.code;row[zh?'商品':'สินค้า']=x.product_name;row[zh?'系统库存':'Stock ระบบ']=Number(x.system_qty);let src=x.source_data||{};row[zh?'物料分类':'หมวดสินค้า']=src['物料分类']??src['หมวดสินค้า']??src['category']??src['Category']??'';row[zh?'物料品牌':'แบรนด์']=src['物料品牌']??src['แบรนด์']??src['brand']??src['Brand']??'';for(let i=0;i<areas.length;i++){let a=areas[i],m=x.area_counts||{};row[a]=Object.prototype.hasOwnProperty.call(m,a)?Number(m[a]):''}row[zh?'盘点合计':'นับรวม']=blank?'':Number(x.counted);row[zh?'差异':'ผลต่าง']=blank?'':Number(x.counted)-Number(x.system_qty);row[zh?'状态':'สถานะ']=L[lang].status[st];return row});let ws=XLSX.utils.json_to_sheet(rows),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,zh?'盘点结果':'ผลตรวจนับ');XLSX.writeFile(wb,zh?'库存盘点结果.xlsx':'ผลตรวจนับสต็อก.xlsx')};
+document.addEventListener('click',function(e){if(e.target&&e.target.id==='archiveSession'){archiveCurrentSession()}});
 $('thBtn').onclick=()=>setLang('th');$('zhBtn').onclick=()=>setLang('zh');
 (async()=>{try{loadApiSettings();await loadSessions();applyLang();setInterval(loadSnap,1000)}catch(e){console.error(e);$('title').textContent=L[lang].connFail}})();
 </script></body></html>
