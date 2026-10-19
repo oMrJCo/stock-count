@@ -73,7 +73,7 @@ async function removeCurrentSession(){
   await rpc('sc_delete_session',{p_pin:PIN,p_session:sid,p_confirm_name:typed});
   sid=null;snap=null;await loadSessions();
 }
-async function archiveCurrentSession(){if(!sid)return;let s=sessions.find(x=>x.id===sid);if(!s)return;await rpc('sc_archive_session',{p_pin:PIN,p_session:sid,p_archived:true});sid=null;snap=null;await loadSessions()}
+async function archiveCurrentSession(){if(!sid)return;let s=sessions.find(x=>x.id===sid);if(!s)return;await rpc('sc_archive_session',{p_pin:PIN,p_session:sid,p_archived:!showArchived});sid=null;snap=null;await loadSessions()}
 function loadApiSettings(){try{let x=JSON.parse(localStorage.getItem('sc_api_settings')||'{}');$('apiUrl').value=x.url||'';$('apiToken').value=x.token||'';$('apiMode').value=x.mode||'pull';if(x.url){$('apiStatus').dataset.state='saved';$('apiStatus').textContent=L[lang].apiSaved}}catch(e){}}
 $('apiSave').onclick=()=>{let x={url:$('apiUrl').value.trim(),token:$('apiToken').value.trim(),mode:$('apiMode').value};localStorage.setItem('sc_api_settings',JSON.stringify(x));$('apiStatus').dataset.state='saved';$('apiStatus').textContent=L[lang].apiSaved};
 $('apiTest').onclick=async()=>{let url=$('apiUrl').value.trim(),token=$('apiToken').value.trim();if(!url){$('apiStatus').dataset.state='';$('apiStatus').textContent=L[lang].apiEmpty;return}$('apiStatus').textContent='...';try{let h={};if(token)h.Authorization='Bearer '+token;let r=await fetch(url,{method:'GET',headers:h});if(!r.ok)throw 0;$('apiStatus').dataset.state='ok';$('apiStatus').textContent=L[lang].apiOk}catch(e){$('apiStatus').dataset.state='fail';$('apiStatus').textContent=L[lang].apiFail}};
