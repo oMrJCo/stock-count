@@ -1,10 +1,10 @@
 <!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>ตรวจนับสต็อก</title>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f3f6fa;color:#14213d}.top{height:44px;background:#102f5f;color:#fff;padding:8px 12px;display:flex;align-items:center;justify-content:space-between}.screen{height:calc(100svh - 44px);max-width:520px;margin:auto;padding:7px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:7px;overflow:hidden}.card{background:#fff;border:1px solid #d9e2ef;border-radius:13px;padding:9px}.login{display:block;height:auto;margin:16px auto;max-width:480px}.login>*{width:100%;margin:5px 0}.hide{display:none!important}input,select,button{font:inherit;font-size:16px;border-radius:10px;border:1px solid #cbd7e6;padding:11px}button{border:0;background:#1769df;color:#fff;font-weight:800}.secondary{background:#edf3fa;color:#18375f}.bad{color:#c93434}.muted{color:#6d7b91}.status{font-size:12px}.last{display:flex;align-items:center;justify-content:space-between}.workarea{display:flex;flex-direction:column;min-height:0;gap:7px}.workarea.item-open .camera{flex:0 0 185px;min-height:185px}.workarea.item-open #cameraActions{display:none!important}.camera{position:relative;flex:1;min-height:180px;background:#07101d;border-radius:12px;overflow:hidden}.camera #reader{width:100%;height:100%}.camera video{width:100%!important;height:100%!important;object-fit:cover}.scanline{pointer-events:none;position:absolute;inset:17% 8%;border:2px solid #fff;border-radius:14px;box-shadow:0 0 0 999px rgba(0,0,0,.16)}.camlabel{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);background:rgba(0,0,0,.62);color:#fff;border-radius:20px;padding:6px 12px;font-size:13px;white-space:nowrap}.actions{display:flex;gap:7px}.actions button{flex:1}.manual{display:flex;gap:7px}.manual input{min-width:0;flex:1}.productbox{background:#fff;border:1px solid #d9e2ef;border-radius:12px;padding:10px;text-align:center}.notfoundbox{background:#fff3f3;border:1px solid #efb7b7;border-radius:12px;padding:12px;text-align:center}.notfoundbox b{display:block;font-size:20px;color:#b42318;margin-bottom:4px}.notfoundbox button{width:100%;margin-top:8px}.code{font-size:14px;color:#6d7b91}.name{font-size:20px;font-weight:900;line-height:1.2;margin:4px 0 8px}.qtyrow{display:grid;grid-template-columns:105px 1fr 1fr;gap:8px;align-items:stretch}.qty{width:100%;text-align:center;font-size:28px;font-weight:900}.okbtn{font-size:20px}.cancelbtn{width:100%;margin:0;font-size:16px}.hint{font-size:13px;color:#6d7b91}.success{font-weight:800;color:#15864b}.lang{display:flex;gap:4px;margin-left:auto;margin-right:8px}.lang button{padding:5px 8px;font-size:12px;background:#fff;color:#102f5f}.lang button.on{background:#ffd84d;color:#10213c}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f3f6fa;color:#14213d}.top{height:44px;background:#102f5f;color:#fff;padding:8px 12px;display:flex;align-items:center;justify-content:space-between}.screen{height:calc(100svh - 44px);max-width:520px;margin:auto;padding:7px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:7px;overflow:hidden}.card{background:#fff;border:1px solid #d9e2ef;border-radius:13px;padding:9px}.login{display:block;height:auto;margin:16px auto;max-width:480px}.login>*{width:100%;margin:5px 0}.hide{display:none!important}input,select,button{font:inherit;font-size:16px;border-radius:10px;border:1px solid #cbd7e6;padding:11px}button{border:0;background:#1769df;color:#fff;font-weight:800}.secondary{background:#edf3fa;color:#18375f}.bad{color:#c93434}.muted{color:#6d7b91}.status{font-size:12px}.last{display:flex;align-items:center;justify-content:space-between}.workarea{display:flex;flex-direction:column;min-height:0;gap:7px}.workarea.item-open .camera{flex:0 0 185px;min-height:185px}.workarea.item-open #cameraActions{display:none!important}.camera{position:relative;flex:1;min-height:180px;background:#07101d;border-radius:12px;overflow:hidden}.camera #reader{width:100%;height:100%}.camera video{width:100%!important;height:100%!important;object-fit:cover}.scanline{pointer-events:none;position:absolute;inset:17% 8%;border:2px solid #fff;border-radius:14px;box-shadow:0 0 0 999px rgba(0,0,0,.16)}.camlabel{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);background:rgba(0,0,0,.62);color:#fff;border-radius:20px;padding:6px 12px;font-size:13px;white-space:nowrap}.actions{display:flex;gap:7px}.actions button{flex:1}.manual{display:flex;gap:7px}.manual input{min-width:0;flex:1}.productbox{background:#fff;border:1px solid #d9e2ef;border-radius:12px;padding:10px;text-align:center}.notfoundbox{background:#fff3f3;border:1px solid #efb7b7;border-radius:12px;padding:12px;text-align:center}.notfoundbox b{display:block;font-size:20px;color:#b42318;margin-bottom:4px}.notfoundbox button{width:100%;margin-top:8px}.code{font-size:14px;color:#6d7b91}.name{font-size:20px;font-weight:900;line-height:1.2;margin:4px 0 8px}.qtyrow{display:grid;grid-template-columns:105px 1fr 1fr;gap:8px;align-items:stretch}.qty{width:100%;text-align:center;font-size:28px;font-weight:900}.okbtn{font-size:20px}.cancelbtn{width:100%;margin:0;font-size:16px}.hint{font-size:13px;color:#6d7b91}.success{font-weight:800;color:#15864b}.lang{display:flex;gap:4px;margin-left:auto;margin-right:8px}.lang button{padding:5px 8px;font-size:12px;background:#fff;color:#102f5f}.lang button.on{background:#ffd84d;color:#10213c}.areaLabel{font-size:13px;font-weight:800;margin-top:8px}.areaBtns{display:flex;gap:7px;flex-wrap:wrap}.areaBtns button{flex:1;min-width:110px}.areaBtns button.on{background:#102f5f;color:#fff}
 </style></head><body>
 <header class="top"><b id="topTitle">📦 ตรวจนับสต็อก</b><div class="lang"><button id="thBtn">TH</button><button id="zhBtn">中文</button></div><span id="branch">—</span></header>
-<div id="login" class="card login"><h2 id="loginTitle">เริ่มตรวจนับ</h2><div id="round" class="muted">กำลังโหลดรอบ...</div><input id="worker" placeholder="ชื่อผู้ตรวจนับ"><input id="area" type="hidden" value=""><button id="start">เริ่มตรวจนับ</button><div id="err" class="bad"></div></div>
+<div id="login" class="card login"><h2 id="loginTitle">เริ่มตรวจนับ</h2><div id="round" class="muted">กำลังโหลดรอบ...</div><input id="worker" placeholder="ชื่อผู้ตรวจนับ"><div id="areaLabel" class="areaLabel">เลือกจุดนับสต็อก</div><div id="areaBtns" class="areaBtns"></div><input id="area" type="hidden" value=""><button id="start">เริ่มตรวจนับ</button><div id="err" class="bad"></div></div>
 <main id="work" class="screen hide">
 <section class="card last"><div><b id="identity"></b><div id="round2" class="muted status"></div></div><button id="change" class="secondary">เปลี่ยน</button></section>
 <section class="workarea">
@@ -23,8 +23,8 @@ var token=getParam("s"),session=null,lastEvent=null,operator="",selected=null,sc
 function $(id){return document.getElementById(id)}
 var lang=localStorage.getItem("sc_lang")||"th";
 var TX={
-th:{top:"📦 ตรวจนับสต็อก",login:"เริ่มตรวจนับ",worker:"ชื่อผู้ตรวจนับ",start:"เริ่มตรวจนับ",change:"เปลี่ยน",scan:"สแกน",manual:"พิมพ์รหัส",manualph:"พิมพ์ Barcode / รหัสสินค้า",ok:"ตกลง",qty:"จำนวน",latest:"ล่าสุด",undo:"↶ ย้อน",camera:"📷 กล้อง",gun:"▥ เครื่องยิง",opening:"กำลังเปิดกล้อง…",aim:"เล็งบาร์โค้ดให้อยู่ในกรอบ",camfail:"เปิดกล้องไม่ได้ • ใช้พิมพ์รหัสแทน",camask:"กำลังขออนุญาตใช้กล้อง…",camdenied:"ไม่ได้รับอนุญาตใช้กล้อง • ตรวจสอบสิทธิ์กล้องของ Safari",searching:"กำลังค้นหา…",notfound:"ไม่พบสินค้า",notfoundclose:"ปิด / สแกนใหม่",found:"พบสินค้าแล้ว • ใส่จำนวน",searchfail:"ค้นหาไม่สำเร็จ",needname:"ใส่ชื่อผู้ตรวจนับก่อน",nolink:"ลิงก์นี้ยังไม่ได้ผูกกับรอบตรวจนับ",noround:"ไม่พบรอบตรวจนับ",closed:"ปิดรอบแล้ว",saved:"บันทึก",savefail:"บันทึกไม่สำเร็จ",cancelitem:"ยกเลิก",adjusthint:"พิมพ์ -5 ได้ หรือใส่ 5 แล้วกด “− ลดจำนวน”",minusqty:"− ลดจำนวน",negfail:"ยอดรวมหลังปรับห้ามติดลบ",searchhint:"พิมพ์บางส่วนของรหัสหรือชื่อสินค้า แล้วเลือกจากรายการ",searchinglist:"กำลังค้นหา...",noresult:"ไม่พบรายการที่ตรง"},
-zh:{top:"📦 库存盘点",login:"开始盘点",worker:"盘点人员姓名",start:"开始盘点",change:"更换",scan:"扫描",manual:"手动输入",manualph:"输入条码 / 商品编码",ok:"确认",qty:"数量",latest:"最近记录",undo:"↶ 撤销",camera:"📷 相机",gun:"▥ 扫码枪",opening:"正在打开相机…",aim:"请将条码对准扫描框",camfail:"无法打开相机 • 请手动输入",camask:"正在请求相机权限…",camdenied:"相机权限未开启 • 请检查 Safari 相机权限",searching:"正在查找…",notfound:"未找到商品",notfoundclose:"关闭 / 重新扫描",found:"已找到商品 • 请输入数量",searchfail:"查找失败",needname:"请先输入盘点人员姓名",nolink:"此链接尚未绑定盘点任务",noround:"未找到盘点任务",closed:"已关闭",saved:"已保存",savefail:"保存失败",cancelitem:"取消",adjusthint:"可直接输入 -5，或输入 5 后点击“− 减少数量”",minusqty:"− 减少数量",negfail:"调整后的总数不能小于 0",searchhint:"输入部分商品编码或名称，然后从列表中选择",searchinglist:"正在搜索...",noresult:"没有匹配商品"}
+th:{top:"📦 ตรวจนับสต็อก",login:"เริ่มตรวจนับ",worker:"ชื่อผู้ตรวจนับ",start:"เริ่มตรวจนับ",change:"เปลี่ยน",scan:"สแกน",manual:"พิมพ์รหัส",manualph:"พิมพ์ Barcode / รหัสสินค้า",ok:"ตกลง",qty:"จำนวน",latest:"ล่าสุด",undo:"↶ ย้อน",camera:"📷 กล้อง",gun:"▥ เครื่องยิง",opening:"กำลังเปิดกล้อง…",aim:"เล็งบาร์โค้ดให้อยู่ในกรอบ",camfail:"เปิดกล้องไม่ได้ • ใช้พิมพ์รหัสแทน",camask:"กำลังขออนุญาตใช้กล้อง…",camdenied:"ไม่ได้รับอนุญาตใช้กล้อง • ตรวจสอบสิทธิ์กล้องของ Safari",searching:"กำลังค้นหา…",notfound:"ไม่พบสินค้า",notfoundclose:"ปิด / สแกนใหม่",found:"พบสินค้าแล้ว • ใส่จำนวน",searchfail:"ค้นหาไม่สำเร็จ",needname:"ใส่ชื่อผู้ตรวจนับก่อน",areatitle:"เลือกจุดนับสต็อก",needarea:"เลือกจุดนับสต็อกก่อน",nolink:"ลิงก์นี้ยังไม่ได้ผูกกับรอบตรวจนับ",noround:"ไม่พบรอบตรวจนับ",closed:"ปิดรอบแล้ว",saved:"บันทึก",savefail:"บันทึกไม่สำเร็จ",cancelitem:"ยกเลิก",adjusthint:"พิมพ์ -5 ได้ หรือใส่ 5 แล้วกด “− ลดจำนวน”",minusqty:"− ลดจำนวน",negfail:"ยอดรวมหลังปรับห้ามติดลบ",searchhint:"พิมพ์บางส่วนของรหัสหรือชื่อสินค้า แล้วเลือกจากรายการ",searchinglist:"กำลังค้นหา...",noresult:"ไม่พบรายการที่ตรง"},
+zh:{top:"📦 库存盘点",login:"开始盘点",worker:"盘点人员姓名",start:"开始盘点",change:"更换",scan:"扫描",manual:"手动输入",manualph:"输入条码 / 商品编码",ok:"确认",qty:"数量",latest:"最近记录",undo:"↶ 撤销",camera:"📷 相机",gun:"▥ 扫码枪",opening:"正在打开相机…",aim:"请将条码对准扫描框",camfail:"无法打开相机 • 请手动输入",camask:"正在请求相机权限…",camdenied:"相机权限未开启 • 请检查 Safari 相机权限",searching:"正在查找…",notfound:"未找到商品",notfoundclose:"关闭 / 重新扫描",found:"已找到商品 • 请输入数量",searchfail:"查找失败",needname:"请先输入盘点人员姓名",areatitle:"选择盘点区域",needarea:"请先选择盘点区域",nolink:"此链接尚未绑定盘点任务",noround:"未找到盘点任务",closed:"已关闭",saved:"已保存",savefail:"保存失败",cancelitem:"取消",adjusthint:"可直接输入 -5，或输入 5 后点击“− 减少数量”",minusqty:"− 减少数量",negfail:"调整后的总数不能小于 0",searchhint:"输入部分商品编码或名称，然后从列表中选择",searchinglist:"正在搜索...",noresult:"没有匹配商品"}
 };
 function t(k){return TX[lang][k]||k}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]})}
@@ -44,7 +44,7 @@ function rpc(fn,body,ok,fail){
 }
 function applyLang(){
   document.documentElement.lang=lang==="zh"?"zh-CN":"th";
-  $("topTitle").innerHTML=t("top");$("loginTitle").innerHTML=t("login");$("worker").placeholder=t("worker");
+  $("topTitle").innerHTML=t("top");$("loginTitle").innerHTML=t("login");$("worker").placeholder=t("worker");$("areaLabel").innerHTML=t("areatitle");
   $("start").innerHTML=t("start");$("change").innerHTML=t("change");$("scanBtn").innerHTML=t("scan");
   $("manualBtn").innerHTML=t("manual");$("code").placeholder=t("manualph");$("manualGo").innerHTML=t("ok");
   $("qty").placeholder=t("qty");$("adjustHint").innerHTML=t("adjusthint");$("minusQty").innerHTML=t("minusqty");$("save").innerHTML=t("ok");$("cancelItem").innerHTML=t("cancelitem");$("notFoundTitle").innerHTML=t("notfound");$("notFoundClose").innerHTML=t("notfoundclose");$("latestLabel").innerHTML=t("latest");$("undo").innerHTML=t("undo");
@@ -52,6 +52,23 @@ function applyLang(){
   $("thBtn").className=lang==="th"?"on":"";$("zhBtn").className=lang==="zh"?"on":"";
 }
 function setLang(x){lang=x;localStorage.setItem("sc_lang",x);applyLang();if(session)$("round").innerHTML=esc(session.name)+" • "+esc(session.count_date)+(session.status!=="open"?" • "+t("closed"):"")}
+function renderAreas(list){
+  var box=$("areaBtns"),html="",current=$("area").value;
+  list=list||[];
+  if(!current&&list.length)$("area").value=list[0];
+  for(var i=0;i<list.length;i++){
+    var a=list[i],on=$("area").value===a;
+    html+='<button type="button" class="'+(on?'on':'secondary')+'" data-area="'+esc(a)+'">'+esc(a)+'</button>';
+  }
+  box.innerHTML=html;
+  var btns=box.getElementsByTagName("button");
+  for(var j=0;j<btns.length;j++){
+    btns[j].onclick=function(){
+      $("area").value=this.getAttribute("data-area");
+      renderAreas(session&&session.areas?session.areas:[]);
+    };
+  }
+}
 function init(){
   applyLang();
   try{var savedWorker=localStorage.getItem(workerKey)||"";if(savedWorker)$("worker").value=savedWorker}catch(e){}
@@ -60,15 +77,15 @@ function init(){
     session=s;if(!session){$("round").innerHTML=t("noround");$("start").disabled=true;return}
     $("branch").innerHTML=esc(session.branch||"Stock Count");
     $("round").innerHTML=esc(session.name)+" • "+esc(session.count_date)+(session.status!=="open"?" • "+t("closed"):"");
-    $("area").value=(session.areas&&session.areas.length)?session.areas[0]:"";
+    $("area").value=(session.areas&&session.areas.length)?session.areas[0]:"";renderAreas(session.areas||[]);
     if(session.status!=="open")$("start").disabled=true;
   },function(){ $("round").innerHTML=t("noround");$("start").disabled=true; });
 }
 function showWork(){
   operator=$("worker").value.replace(/^\s+|\s+$/g,"");
-  if(!operator){$("err").innerHTML=t("needname");return}try{localStorage.setItem(workerKey,operator)}catch(e){}
+  if(!operator){$("err").innerHTML=t("needname");return}if(!$("area").value){$("err").innerHTML=t("needarea");return}try{localStorage.setItem(workerKey,operator)}catch(e){}
   if(!session){$("err").innerHTML=t("noround");return}
-  $("identity").innerHTML=esc(operator);$("round2").innerHTML=esc(session.name);
+  $("identity").innerHTML=esc(operator);$("round2").innerHTML=esc(session.name)+" • "+esc($("area").value);
   $("login").className+=" hide";$("work").className=$("work").className.replace(/\bhide\b/g,"");
   setMode("gun");
 }
