@@ -19,7 +19,7 @@
 var API="https://dxlngxkuggbgdzmithzx.supabase.co/rest/v1/rpc/";
 var KEY="sb_publishable_sqAwuko-g-Kgzp51YyMT3g_gIAwtEan";
 function getParam(name){var m=new RegExp("[?&]"+name+"=([^&]*)").exec(location.search);return m?decodeURIComponent(m[1].replace(/\+/g," ")):""}
-var token=getParam("s"),session=null,lastEvent=null,operator="",selected=null,scanner=null,scanning=false,busy=false,mode="camera",workerKey="sc_worker_"+(token||"default"),searchTimer=null,searchSeq=0;
+var token=getParam("s"),session=null,lastEvent=null,lastSaved=null,operator="",selected=null,scanner=null,scanning=false,busy=false,mode="camera",workerKey="sc_worker_"+(token||"default"),searchTimer=null,searchSeq=0;
 function $(id){return document.getElementById(id)}
 var lang=localStorage.getItem("sc_lang")||"th";
 var TX={
@@ -226,7 +226,7 @@ function saveZero(){
   if(!confirm(t("zeroconfirm")))return;
   var item=selected,qty=0;
   rpc("sc_count",{p_token:token,p_code:item.code,p_operator:operator,p_area:$("area").value,p_qty:qty},function(x){
-    lastEvent=x.event_id;$("latest").innerHTML="<b>"+esc(x.code)+"</b> 0 → "+x.counted_total;$("camlabel").innerHTML="✓ "+t("saved")+" 0";
+    lastEvent=x.event_id;lastSaved={code:x.code,qty:0};$("latest").innerHTML="<b>"+esc(x.code)+"</b> 0 → "+x.counted_total;$("camlabel").innerHTML="✓ "+t("saved")+" 0";
     $("productBox").className="productbox hide";document.querySelector(".workarea").className="workarea";selected=null;$("qty").value="";
     setTimeout(function(){busy=false;$("camlabel").innerHTML=t("aim");if(mode==="gun")$("code").focus();else ensureCamera()},300);
   },function(err){busy=false;$("camlabel").innerHTML=t("savefail");alert(t("savefail"))});
@@ -235,12 +235,24 @@ function save(){
   if(!selected)return;var qty=Number($("qty").value);if(isNaN(qty)||qty===0){$("qty").focus();return}
   var item=selected;
   rpc("sc_count",{p_token:token,p_code:item.code,p_operator:operator,p_area:$("area").value,p_qty:qty},function(x){
-    lastEvent=x.event_id;var sign=qty>0?"+":"";$("latest").innerHTML="<b>"+esc(x.code)+"</b> "+sign+qty+" → "+x.counted_total;$("camlabel").innerHTML="✓ "+t("saved")+" "+sign+qty;
+    lastEvent=x.event_id;lastSaved={code:x.code,qty:qty};var sign=qty>0?"+":"";$("latest").innerHTML="<b>"+esc(x.code)+"</b> "+sign+qty+" → "+x.counted_total;$("camlabel").innerHTML="✓ "+t("saved")+" "+sign+qty;
     $("productBox").className="productbox hide";document.querySelector(".workarea").className="workarea";selected=null;$("qty").value="";
     setTimeout(function(){busy=false;$("camlabel").innerHTML=t("aim");if(mode==="gun")$("code").focus();else ensureCamera()},300);
   },function(err){busy=false;$("camlabel").innerHTML=t("savefail");if(String(err).indexOf("NEGATIVE_TOTAL_NOT_ALLOWED")>=0)alert(t("negfail"));else alert(t("savefail"));$("qty").focus()});
 }
-function undo(){if(!lastEvent)return;rpc("sc_undo",{p_token:token,p_event:lastEvent,p_operator:operator},function(ok){if(ok){$("latest").innerHTML="<b>—</b>";lastEvent=null}if(mode==="gun")$("code").focus()})}
+function undo(){
+  if(!lastEvent)return;
+  var prev=lastSaved;
+  rpc("sc_undo",{p_token:token,p_event:lastEvent,p_operator:operator},function(ok){
+    if(!ok)return;
+    $("latest").innerHTML="<b>—</b>";lastEvent=null;
+    if(prev&&prev.code){
+      busy=false;
+      lookup(prev.code);
+      setTimeout(function(){if(selected&&prev){$("qty").value=String(prev.qty);$("qty").focus()}},250);
+    }else if(mode==="gun")$("code").focus();
+  })
+}
 $("start").onclick=showWork;$("change").onclick=function(){try{localStorage.removeItem(workerKey)}catch(e){}location.reload()};
 $("recheckMode").onclick=openRecheck;$("recheckClose").onclick=closeRecheck;$("recheckCategory").onchange=loadRecheck;$("recheckSearch").oninput=function(){if(searchTimer)clearTimeout(searchTimer);searchTimer=setTimeout(loadRecheck,180)};$("cameraMode").onclick=function(){mode="camera";$("cameraMode").className="";$("gunMode").className="secondary";$("camera").className="camera";$("cameraActions").className="actions";$("manualBox").className="manual hide";startCamera()};$("gunMode").onclick=function(){setMode("gun")};
 $("scanBtn").onclick=function(){if(selected)resumeScan();else{busy=false;$("camlabel").innerHTML=t("aim");startCamera()}};
